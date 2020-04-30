@@ -21,14 +21,15 @@
  */
 #ifndef _HDFS_LIBHDFS3_RPC_SASLCLIENT_H_
 #define _HDFS_LIBHDFS3_RPC_SASLCLIENT_H_
-
+#ifdef USE_KRB5
 #include <gsasl.h>
+#endif
 
 #include "client/Token.h"
 #include "network/Socket.h"
 #include "RpcAuth.h"
 #include "RpcHeader.pb.h"
-
+#ifdef USE_KRB5
 namespace Hdfs {
 namespace Internal {
 
@@ -58,5 +59,6 @@ private:
 
 }
 }
+#endif
 
 #endif /* _HDFS_LIBHDFS3_RPC_SASLCLIENT_H_ */

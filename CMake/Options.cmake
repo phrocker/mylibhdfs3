@@ -4,6 +4,8 @@ OPTION(ENABLE_SSE "enable SSE4.2 buildin function" ON)
 OPTION(ENABLE_FRAME_POINTER "enable frame pointer on 64bit system with flag -fno-omit-frame-pointer, on 32bit system, it is always enabled" ON)
 OPTION(ENABLE_LIBCPP "using libc++ instead of libstdc++, only valid for clang compiler" OFF)
 OPTION(ENABLE_BOOST "using boost instead of native compiler c++0x support" OFF)
+option(ENABLE_KERBEROS "Enable Kerberos Fx" OFF)
+option(ENABLE_TEST "Enables Testing. Off by default" OFF)
 
 INCLUDE (CheckFunctionExists)
 CHECK_FUNCTION_EXISTS(dladdr HAVE_DLADDR)

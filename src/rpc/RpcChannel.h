@@ -33,7 +33,9 @@
 #include "RpcChannelKey.h"
 #include "RpcHeader.pb.h"
 #include "RpcRemoteCall.h"
+#if USE_KRB5
 #include "SaslClient.h"
+#endif
 #include "Thread.h"
 #include "Unordered.h"
 
@@ -229,6 +231,7 @@ private:
      */
     void shutdown(exception_ptr reason);
 
+#if USE_KRB5
     const RpcSaslProto_SaslAuth * createSaslClient(
         const ::google::protobuf::RepeatedPtrField<RpcSaslProto_SaslAuth> * auths);
 
@@ -237,7 +240,7 @@ private:
     std::string saslEvaluateToken(RpcSaslProto & response, bool serverIsDone);
 
     RpcAuth setupSaslConnection();
-
+#endif
 private:
     /**
      * Construct a RpcChannelImpl instance for test.
@@ -257,7 +260,9 @@ private:
     RpcChannelKey key;
     RpcClient & client;
     shared_ptr<BufferedSocketReader> in;
+#if USE_KRB5
     shared_ptr<SaslClient> saslClient;
+#endif
     shared_ptr<Socket> sock;
     steady_clock::time_point lastActivity; // ping is a kind of activity, lastActivity will be updated after ping
     steady_clock::time_point lastIdle; // ping cannot change idle state. If there is still pending calls, lastIdle is always "NOW".

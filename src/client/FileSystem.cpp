@@ -35,7 +35,9 @@
 
 #include <algorithm>
 #include <string>
-#include <krb5/krb5.h>
+#ifdef USE_KRB5
+  #include <krb5/krb5.h>
+#endif
 
 using namespace Hdfs::Internal;
 
@@ -45,6 +47,7 @@ namespace Internal {
 
 static std::string ExtractPrincipalFromTicketCache(
     const std::string & cachePath) {
+#ifdef USE_KRB5
     krb5_context cxt = NULL;
     krb5_ccache ccache = NULL;
     krb5_principal principal = NULL;
@@ -107,8 +110,10 @@ static std::string ExtractPrincipalFromTicketCache(
               "FileSystem: Failed to extract principal from ticket cache: %s",
               errmsg.c_str());
     }
-
     return retval;
+#endif
+    THROW(HdfsIOException, "Do not have KRB library available");
+
 }
 
 

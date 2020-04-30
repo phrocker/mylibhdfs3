@@ -41,7 +41,7 @@
 
 #include <cstring>
 #include <inttypes.h>
-#include <libxml/uri.h>
+//#include <libxml/uri.h>
 #include <strings.h>
 
 namespace Hdfs {

@@ -23,7 +23,9 @@
 #define _HDFS_LIBHDFS3_CLIENT_KMSCLIENTPROVIDER_H_
 
 #include <string>
+#ifdef USE_KRB5
 #include <gsasl.h>
+#endif
 
 #include "openssl/conf.h"
 #include "openssl/evp.h"
@@ -39,7 +41,7 @@
 using boost::property_tree::ptree;
 using namespace Hdfs::Internal;
 
-
+#ifdef USE_KRB5
 namespace Hdfs {
 
 class KmsClientProvider {
@@ -139,4 +141,5 @@ private:
 };
 
 }
+#endif
 #endif

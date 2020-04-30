@@ -37,8 +37,11 @@
 #include "server/LocatedBlocks.h"
 #include "SessionConfig.h"
 #include "Unordered.h"
+#if USE_KRB5
 #include "CryptoCodec.h"
+
 #include "KmsClientProvider.h"
+#endif
 
 #ifdef MOCK
 #include "TestDatanodeStub.h"
@@ -103,7 +106,7 @@ public:
      * @return return a printable string
      */
     std::string toString();
-    
+#if USE_KRB5
     /**
      * Get KmsClientProvider.
      */
@@ -123,6 +126,7 @@ public:
      * Set CryptoCodec.
      */
     void setCryptoCodec(shared_ptr<CryptoCodec> cryptoCodec);
+#endif
 
 private:
     bool choseBestNode();
@@ -163,8 +167,10 @@ private:
     std::string path;
     std::vector<DatanodeInfo> failedNodes;
     std::vector<char> localReaderBuffer;
+#if USE_KRB5
     shared_ptr<CryptoCodec> cryptoCodec;
     shared_ptr<KmsClientProvider> kcp;
+#endif
     shared_ptr<RpcAuth> enAuth;
     FileStatus fileStatus;
 

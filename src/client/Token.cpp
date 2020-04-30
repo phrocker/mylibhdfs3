@@ -24,14 +24,14 @@
 #include "Hash.h"
 #include "Token.h"
 #include "WritableUtils.h"
-
+#ifdef USE_KRB5
 #include <gsasl.h>
-
+#endif
 using namespace Hdfs::Internal;
 
 namespace Hdfs {
 namespace Internal {
-
+#ifdef USE_KRB5
 static std::string Base64Encode(const char * input, size_t len) {
     int rc = 0;
     size_t outLen;
@@ -123,7 +123,7 @@ static void Base64Decode(const std::string & urlSafe,
     memcpy(&buffer[0], output, outLen);
     gsasl_free(output);
 }
-
+#endif
 std::string Token::toString() const {
     try {
         size_t len = 0;
@@ -135,7 +135,12 @@ std::string Token::toString() const {
         len += out.WriteRaw(&password[0], password.size());
         len += out.WriteText(kind);
         len += out.WriteText(service);
+#ifdef USE_KRB5
         return Base64Encode(&buffer[0], len);
+#else
+         return std::string(buffer.data(),len);
+#endif
+
     } catch (...) {
         NESTED_THROW(HdfsIOException, "cannot convert token to string");
     }
@@ -146,7 +151,9 @@ Token & Token::fromString(const std::string & str) {
 
     try {
         std::vector<char> buffer;
+#ifdef USE_KRB5
         Base64Decode(str, buffer);
+#endif
         WritableUtils in(&buffer[0], buffer.size());
         len = in.ReadInt32();
         identifier.resize(len);

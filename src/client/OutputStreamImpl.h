@@ -35,8 +35,10 @@
 #include "server/LocatedBlock.h"
 #include "SessionConfig.h"
 #include "Thread.h"
+#ifdef USE_KRB5
 #include "CryptoCodec.h"
 #include "KmsClientProvider.h"
+#endif
 #ifdef MOCK
 #include "PipelineStub.h"
 #endif
@@ -106,6 +108,7 @@ public:
      */
     void setError(const exception_ptr & error);
 
+#ifdef USE_KRB5
     /**
      * Get KmsClientProvider.
      */
@@ -125,7 +128,7 @@ public:
      * Set CryptoCodec.
      */
     void setCryptoCodec(shared_ptr<CryptoCodec> cryptoCodec);
-
+#endif
 private:
     void appendChunkToPacket(const char * buf, int size);
     void appendInternal(const char * buf, int64_t size);
@@ -176,8 +179,10 @@ private:
     steady_clock::time_point lastSend;
     //thread heartBeatSender;
     FileStatus fileStatus;
+#ifdef USE_KRB5
     shared_ptr<CryptoCodec> cryptoCodec;
     shared_ptr<KmsClientProvider> kcp;
+#endif
     shared_ptr<RpcAuth> auth;
 
     friend class Pipeline;

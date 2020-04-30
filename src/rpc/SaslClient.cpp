@@ -26,6 +26,7 @@
 #include "ExceptionInternal.h"
 #include "SaslClient.h"
 
+#ifdef USE_KRB5
 #define SASL_SUCCESS 0
 
 namespace Hdfs {
@@ -157,4 +158,4 @@ bool SaslClient::isComplete() {
 
 }
 }
-
+#endif

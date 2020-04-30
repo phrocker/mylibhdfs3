@@ -1,0 +1,9 @@
+.kdev4/
+build/
+*.pyc
+.project
+.cproject
+workspace.xml
+.settings/
+native-iterators-jni/.idea/*
+native-iterators-jni/target

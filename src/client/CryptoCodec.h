@@ -27,13 +27,17 @@
 #include "openssl/conf.h"
 #include "openssl/evp.h"
 #include "openssl/err.h"
+#ifdef USE_KRB5
 #include "FileEncryptionInfo.h"
 #include "KmsClientProvider.h"
 
 #define KEY_LENGTH_256 32
 #define KEY_LENGTH_128 16
 
+
 namespace Hdfs {
+
+
 
 	enum CryptoMethod {
 		DECRYPT = 0,
@@ -109,4 +113,5 @@ namespace Hdfs {
 	};
 
 }
+#endif
 #endif

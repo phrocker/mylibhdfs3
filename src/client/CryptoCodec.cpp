@@ -23,6 +23,7 @@
 #include "CryptoCodec.h"
 #include "Logger.h"
 
+#ifdef USE_KRB5
 using namespace Hdfs::Internal;
 
 
@@ -213,4 +214,4 @@ namespace Hdfs {
 	}
 
 }
-
+#endif

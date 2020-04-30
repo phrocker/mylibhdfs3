@@ -43,7 +43,11 @@ OutputStreamImpl::OutputStreamImpl() :
 /*heartBeatStop(true),*/ closed(true), isAppend(false), syncBlock(false), checksumSize(0), chunkSize(
         0), chunksPerPacket(0), closeTimeout(0), heartBeatInterval(0), packetSize(0), position(
             0), replication(0), blockSize(0), bytesWritten(0), cursor(0), lastFlushed(
-                0), nextSeqNo(0), packets(0), cryptoCodec(NULL), kcp(NULL) {
+                0), nextSeqNo(0), packets(0){
+#ifdef USE_KRB5
+  cryptoCodec = nullptr;
+  kcp=nullptr;
+#endif
     if (HWCrc32c::available()) {
         checksum = shared_ptr < Checksum > (new HWCrc32c());
     } else {
@@ -85,7 +89,7 @@ void OutputStreamImpl::setError(const exception_ptr & error) {
     } catch (...) {
     }
 }
-
+#ifdef USE_KRB5
 shared_ptr<CryptoCodec> OutputStreamImpl::getCryptoCodec() {
     return cryptoCodec;
 }
@@ -101,6 +105,7 @@ shared_ptr<KmsClientProvider> OutputStreamImpl::getKmsClientProvider() {
 void OutputStreamImpl::setKmsClientProvider(shared_ptr<KmsClientProvider> kcp) {
     this->kcp = kcp;
 }
+#endif
 /**
  * To create or append a file.
  * @param fs hdfs file system.
@@ -254,6 +259,7 @@ void OutputStreamImpl::openInternal(shared_ptr<FileSystemInter> fs, const char *
             fileStatus = fs->getFileStatus(this->path.c_str());
             FileEncryptionInfo *fileEnInfo = fileStatus.getFileEncryption();
             if (fileStatus.isFileEncrypted()) {
+#ifdef USE_KRB5
                 if (cryptoCodec == NULL) {
                     auth = shared_ptr<RpcAuth> (
                             new RpcAuth(fs->getUserInfo(), RpcAuth::ParseMethod(conf->getKmsMethod())));
@@ -268,6 +274,8 @@ void OutputStreamImpl::openInternal(shared_ptr<FileSystemInter> fs, const char *
                         THROW(HdfsIOException, "init CryptoCodec failed, file:%s", this->path.c_str());
                     }
                 }
+#endif
+                THROW(HdfsIOException, "No Crypto Support");
             }
             initAppend();
             LeaseRenewer::GetLeaseRenewer().StartRenew(filesystem);
@@ -285,6 +293,7 @@ void OutputStreamImpl::openInternal(shared_ptr<FileSystemInter> fs, const char *
     fileStatus = fs->getFileStatus(this->path.c_str());
     FileEncryptionInfo *fileEnInfo = fileStatus.getFileEncryption();
     if (fileStatus.isFileEncrypted()) {
+#ifdef USE_KRB5
         if (cryptoCodec == NULL) {
             auth = shared_ptr<RpcAuth>(
                     new RpcAuth(fs->getUserInfo(), RpcAuth::ParseMethod(conf->getKmsMethod())));
@@ -300,6 +309,8 @@ void OutputStreamImpl::openInternal(shared_ptr<FileSystemInter> fs, const char *
                 THROW(HdfsIOException, "init CryptoCodec failed, file:%s", this->path.c_str());
             }
         }
+#endif
+        THROW(HdfsIOException, "Crypto not supported");
     }
     closed = false;
     computePacketChunkSize();
@@ -333,10 +344,11 @@ void OutputStreamImpl::appendInternal(const char * buf, int64_t size) {
 	std::string bufEncode;
 
     if (fileStatus.isFileEncrypted()) {
+#ifdef USE_KRB5
         //encrypt buf
         bufEncode = cryptoCodec->cipher_wrap(buf, size);
         buf = bufEncode.c_str();
-
+#endif
     }
     while (todo > 0) {
         int batch = buffer.size() - position;

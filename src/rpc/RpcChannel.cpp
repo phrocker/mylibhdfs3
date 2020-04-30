@@ -85,6 +85,7 @@ void RpcChannelImpl::close(bool immediate) {
     }
 }
 
+#ifdef USE_KRB5
 void RpcChannelImpl::sendSaslMessage(RpcSaslProto * msg, Message * resp) {
     int totalLen;
     WriteBuffer buffer;
@@ -246,6 +247,7 @@ RpcAuth RpcChannelImpl::setupSaslConnection() {
 
     return retval;
 }
+#endif
 
 void RpcChannelImpl::connect() {
     int sleep = 1;
@@ -269,6 +271,7 @@ void RpcChannelImpl::connect() {
                 sendConnectionHeader(auth);
 
                 if (auth.getProtocol() == AuthProtocol::SASL) {
+#ifdef USE_KRB5
                     auth = setupSaslConnection();
 
                     if (auth.getProtocol() == AuthProtocol::SASL) {
@@ -281,6 +284,10 @@ void RpcChannelImpl::connect() {
                      */
                     sock->close();
                     CheckOperationCanceled();
+#else
+                    LOG(LOG_ERROR,
+                                    "No SaSL support");
+#endif
                 } else {
                     break;
                 }

@@ -22,13 +22,18 @@
 
 #include "KmsClientProvider.h"
 #include "Logger.h"
+#ifdef USE_KRB5
 #include <gsasl.h>
+#endif
 #include <map>
+#ifdef NEED_BOOST
 #include <boost/property_tree/json_parser.hpp>
 using namespace Hdfs::Internal;
 using boost::property_tree::read_json;
 using boost::property_tree::write_json;
+#endif
 
+#ifdef USE_KRB5
 namespace Hdfs {
 
 /**
@@ -322,4 +327,4 @@ ptree KmsClientProvider::decryptEncryptedKey(const FileEncryptionInfo &encryptio
 }
 
 }
-
+#endif
