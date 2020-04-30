@@ -23,10 +23,6 @@ endif()
 
 SET(CMAKE_VERBOSE_MAKEFILE ON CACHE STRING "Verbose build." FORCE)
 
-IF(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
-    MESSAGE(FATAL_ERROR "cannot build the project in the source directory! Out-of-source build is enforced!")
-ENDIF()
-
 SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake" ${CMAKE_MODULE_PATH})
 SET(DOXYFILE_PATH ${CMAKE_SOURCE_DIR}/docs)
 
