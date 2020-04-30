@@ -61,6 +61,7 @@ download_lib_xml(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 
 
 ######################  PROTOBUF
+if (NOT PROTOBUF_FOUND)
 	ExternalProject_Add(
 	  Protobuf
 	  GIT_REPOSITORY "https://github.com/phrocker/protobuf.git"
@@ -78,6 +79,7 @@ download_lib_xml(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 	set(PROTOBUF_PROTOC_EXECUTABLE "${CMAKE_CURRENT_BINARY_DIR}/dependencies/protobuf/bin/protoc" CACHE STRING "" FORCE)
 	add_dependencies(protobuf Protobuf)
 	set(PROTOBUF_FOUND TRUE CACHE STRING "" FORCE)
+endif()
 ######################  PROTOBUF
 
 
