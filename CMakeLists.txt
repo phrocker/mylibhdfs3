@@ -62,7 +62,8 @@ download_lib_xml(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 
 ######################  PROTOBUF
 if (NOT PROTOBUF_FOUND)
-	ExternalProject_Add(
+	message("Building protobuf")
+    ExternalProject_Add(
 	  Protobuf
 	  GIT_REPOSITORY "https://github.com/phrocker/protobuf.git"
 	  GIT_TAG v3.1.0
