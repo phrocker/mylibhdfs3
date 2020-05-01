@@ -60,37 +60,12 @@ download_lib_xml(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 ######################  LibXML2
 
 
-######################  PROTOBUF
-if (NOT PROTOBUF_FOUND)
-	message("Building protobuf")
-    ExternalProject_Add(
-	  Protobuf
-	  GIT_REPOSITORY "https://github.com/phrocker/protobuf.git"
-	  GIT_TAG v3.1.0
-	  BUILD_IN_SOURCE true
-	  SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/dependencies/protobuf-src"
-	  CONFIGURE_COMMAND ./autogen.sh && ./configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/dependencies/protobuf
-	  UPDATE_COMMAND ""
-	  )
-	
-	add_library(protobuf STATIC IMPORTED)
-	set_target_properties(protobuf PROPERTIES IMPORTED_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/dependencies/protobuf/lib/libprotobuf.a" )
-	set(PROTOBUF_LIBS "${CMAKE_CURRENT_BINARY_DIR}/dependencies/protobuf/lib/libprotobuf.a" CACHE STRING "" FORCE)
-	set(PROTOBUF_INCLUDE_DIRS "${CMAKE_CURRENT_BINARY_DIR}/dependencies/protobuf/include" CACHE STRING "" FORCE)
-	set(PROTOBUF_PROTOC_EXECUTABLE "${CMAKE_CURRENT_BINARY_DIR}/dependencies/protobuf/bin/protoc" CACHE STRING "" FORCE)
-	add_dependencies(protobuf Protobuf)
-	set(PROTOBUF_FOUND TRUE CACHE STRING "" FORCE)
-endif()
-######################  PROTOBUF
-
-
 
 FIND_PACKAGE(LibXml2 REQUIRED)
 
 if (ENABLE_KERBEROS)
 	FIND_PACKAGE(KERBEROS REQUIRED)
 endif()
-FIND_PACKAGE(Protobuf REQUIRED)
 if (ENABLE_KERBEROS)
 	FIND_PACKAGE(GSasl REQUIRED)
 endif (ENABLE_KERBEROS)
